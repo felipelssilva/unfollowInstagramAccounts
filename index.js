@@ -4,7 +4,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const { join } = require('path')
 const path = require('path')
-const accountsPath = path.join(__dirname, 'bin/contas_test.txt')
+const accountsPath = path.join(__dirname, 'bin/accounts.txt')
 
 robot.setMouseDelay(1)
 robot.setKeyboardDelay(1)
