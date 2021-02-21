@@ -1,0 +1,23 @@
+{
+    "name": "instaunfollow",
+    "version": "1.0.0",
+    "description": "",
+    "main": "bin/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@nut-tree/nut-js": "^1.5.1-next.20210218071742",
+        "chalk": "^2.4.2",
+        "cli-table": "^0.3.1",
+        "commander": "^2.19.0",
+        "figlet": "^1.2.1",
+        "for-async": "^1.0.1",
+        "inquirer": "^6.2.2",
+        "opencv4nodejs": "^5.6.0",
+        "robotjs": "^0.6.0",
+        "shelljs": "^0.8.3"
+    }
+}
