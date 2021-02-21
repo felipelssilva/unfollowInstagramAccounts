@@ -4,9 +4,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const { join } = require('path')
 const path = require('path')
-
 const accountsPath = path.join(__dirname, 'bin/contas_test.txt')
-const commandsPath = join(__dirname, 'bin/commands.json')
 
 robot.setMouseDelay(1)
 robot.setKeyboardDelay(1)
@@ -14,8 +12,6 @@ robot.setKeyboardDelay(1)
 const unfollow = {}
 unfollow.host = ''
 unfollow.account = ''
-unfollow.splittedData = []
-unfollow.running = false
 
 function sleep(ms) {
     return new Promise((resolve) => {
@@ -23,23 +19,12 @@ function sleep(ms) {
     })
 }
 
-const getJson = (path) => {
-    const data = fs.existsSync(path) ? fs.readFileSync(path) : []
-    try {
-        return JSON.parse(data)
-    } catch (e) {
-        return []
-    }
-}
-
-const saveJson = (path, data) => fs.writeFileSync(path, JSON.stringify(data, null, '\t'))
-
 async function getFilePaths() {
     let filePaths = fs.readFileSync(accountsPath, { encoding: 'utf-8' })
     return filePaths.split(`\r\n`)
 }
 
-async function initUnfollow() {
+async function main() {
     const paths = await getFilePaths()
 
     await paths.reduce(async(promise, path) => {
@@ -54,14 +39,16 @@ async function toUnfollow(path) {
     unfollow.account = path.split('/')[3]
 
     console.log('')
+    console.log(chalk.green('----------------------------'))
     console.log('')
-    console.log(`Unfollowing now: ${chalk.green( unfollow.account)}`)
+    console.log(`--- Begind the steps for ${chalk.green(unfollow.account)} account ---`)
     console.log('')
 
     /**
      * STEP ONE START *
+     * find the browser and click to open
      */
-    console.log('move and click on navigator')
+    console.log('Move and click on navigator')
     robot.moveMouse(160, 1060)
     robot.mouseClick()
 
@@ -69,8 +56,9 @@ async function toUnfollow(path) {
 
     /**
      * STEP TWO START *
+     * click on add a new tab
      */
-    console.log('move and click to a new tab')
+    console.log('Move and click to a new tab')
     robot.moveMouse(1240, 27)
     robot.mouseClick()
 
@@ -78,8 +66,10 @@ async function toUnfollow(path) {
 
     /**
      * STEP THREE START *
+     * write in browser a Instagram URL plus account ID and press enter
+     * to access the website
      */
-    console.log('write url')
+    console.log('Write url')
     unfollow.host.split('').forEach(hostElement => {
         robot.keyTap(hostElement)
     })
@@ -98,7 +88,7 @@ async function toUnfollow(path) {
     /**
      * STEP FOUR START *
      */
-    console.log('move and click on terminal')
+    console.log('Move and click on terminal')
     robot.moveMouse(1600, 600)
     robot.mouseClick()
 
@@ -116,14 +106,6 @@ async function toUnfollow(path) {
         validate: value => value ? true : 'the field cannot be empty'
     }])
 
-    const data = getJson(commandsPath)
-    data.push({
-        command: answers.unfollow,
-        account: unfollow.account
-    })
-
-    saveJson(commandsPath, data)
-
     if (answers.unfollow == '1') {
         console.log('')
         console.log(`${chalk.red('Unfollowing...!')}`)
@@ -132,24 +114,25 @@ async function toUnfollow(path) {
 
         await sleep(500)
 
-        console.log('move and click in button of friend')
+        //mudar o mudar do botao, as vezes tem o botao de messagem e ele atrapalha
+        console.log('Move and click in button of friend')
         robot.moveMouse(820, 218)
         robot.mouseClick()
 
         await sleep(500)
 
-        console.log('move and click in button for unfollow')
+        console.log('Move and click in button for unfollow')
         robot.moveMouse(720, 650)
             //robot.mouseClick()
 
         await sleep(2000)
 
-        console.log('close the tab')
+        console.log('Close the tab')
         robot.keyTap('w', 'control')
 
         await sleep(500)
 
-        console.log('move and click on terminal')
+        console.log('Move and click on terminal')
         robot.moveMouse(1600, 600)
         robot.mouseClick()
 
@@ -160,21 +143,33 @@ async function toUnfollow(path) {
 
         await sleep(2000)
 
-        console.log('move and click on navigator')
+        console.log('Move and click on navigator')
         robot.moveMouse(160, 1060)
         robot.mouseClick()
 
         await sleep(500)
 
-        console.log('close the tab')
+        console.log('Close the tab')
         robot.keyTap('w', 'control')
 
         await sleep(500)
 
-        console.log('move and click on terminal')
+        console.log('Move and click on terminal')
         robot.moveMouse(1600, 600)
         robot.mouseClick()
     }
 }
 
-initUnfollow()
+/*function testScreenCapture() {
+
+    var img = robot.screen.capture(0, 0, 1920, 1080);
+
+    var pixel = img.colorAt(631, 222)
+
+    console.log(pixel)
+
+}*/
+
+//testScreenCapture()
+
+main()
