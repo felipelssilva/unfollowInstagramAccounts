@@ -5,7 +5,7 @@ const fs = require('fs');
 const { join } = require('path');
 const path = require('path');
 const { config } = require("process");
-const accountsPath = path.join(__dirname, 'bin/accounts-2.txt');
+const accountsPath = path.join(__dirname, 'bin/accounts-2.json');
 
 const configs = {
     browser: {
@@ -43,8 +43,8 @@ const configs = {
     }
 };
 
-robot.setMouseDelay(0);
-robot.setKeyboardDelay(0);
+robot.setMouseDelay(1);
+robot.setKeyboardDelay(1);
 
 var unfollow = {};
 unfollow.host = '';
@@ -58,8 +58,7 @@ function sleep(ms) {
 
 async function getFilePaths() {
     let filePaths = fs.readFileSync(accountsPath, { encoding: 'utf-8' });
-
-    return filePaths.length > 0 ? filePaths.split(`\r\n`) : '';
+    return JSON.parse(filePaths);
 }
 
 async function main() {
@@ -182,17 +181,9 @@ function addNewTab() {
 
 function writeUrlAndEnter() {
     console.log('Write url');
-    unfollow.host.split('').forEach(hostElement => {
-        robot.keyTap(hostElement);
-    })
+    robot.typeString(unfollow.host)
     robot.keyTap('/');
-    unfollow.account.split('').forEach(accElement => {
-        if (accElement == '_') {
-            robot.keyTap(accElement, 'shift');
-        } else {
-            robot.keyTap(accElement);
-        }
-    })
+    robot.typeString(unfollow.account)
     robot.keyTap('enter');
 }
 
