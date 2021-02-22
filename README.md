@@ -19,6 +19,7 @@
 - [How I got my data](#how-i-got-my-data)
 - [How to use](#how-to-use)
 - [What does the system do?](#what-does-the-system-do)
+- [Plans](#plans)
 - [License](#license)
 
 ---
@@ -212,6 +213,8 @@ It will be **necessary to have your supervision** to choose the options (unfollo
 
 ## What does the system do?
 
+coming soon
+
 ---
 
 ## Plans
@@ -222,6 +225,7 @@ It will be **necessary to have your supervision** to choose the options (unfollo
     - [ ] find the my account button
 
 ---
+
 ## License
 
 **[MIT](https://github.com/felipelssilva/unfollowInstagramAccounts/blob/main/LICENSE)**
