@@ -1,5 +1,5 @@
 <p style="text-align:center;">
-    <img src="bin/imgs/unfollowInstagramAccounts.png">
+    <img src="bin/imgs/logo.png">
 </p>
 <p style="text-align:center;">
     <img src="https://img.shields.io/github/languages/top/felipelssilva/unfollowInstagramAccounts">
