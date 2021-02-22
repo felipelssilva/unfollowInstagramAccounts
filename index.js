@@ -1,175 +1,294 @@
-const robot = require("robotjs")
-const inquirer = require('inquirer')
-const chalk = require('chalk')
-const fs = require('fs')
-const { join } = require('path')
-const path = require('path')
-const accountsPath = path.join(__dirname, 'bin/accounts.txt')
+const robot = require("robotjs");
+const inquirer = require('inquirer');
+const chalk = require('chalk');
+const fs = require('fs');
+const { join } = require('path');
+const path = require('path');
+const { config } = require("process");
+const accountsPath = path.join(__dirname, 'bin/accounts-2.txt');
 
-robot.setMouseDelay(1)
-robot.setKeyboardDelay(1)
+const configs = {
+    browser: {
+        x: 160,
+        y: 1060
+    },
+    terminal: {
+        x: 1600,
+        y: 600
+    },
+    friend: {
+        x: 250,
+        y: 250
+    },
+    unfollow: {
+        btn: {
+            x: 0,
+            y: 0
+        },
+        count: {
+            paths: 0,
+            unfollow: {
+                count: 0,
+                accounts: []
+            },
+            stillFollow: {
+                count: 0,
+                accounts: []
+            },
+            doNothing: {
+                count: 0,
+                accounts: []
+            }
+        }
+    }
+};
 
-const unfollow = {}
-unfollow.host = ''
-unfollow.account = ''
+robot.setMouseDelay(0);
+robot.setKeyboardDelay(0);
+
+var unfollow = {};
+unfollow.host = '';
+unfollow.account = '';
 
 function sleep(ms) {
     return new Promise((resolve) => {
-        setTimeout(resolve, ms)
-    })
+        setTimeout(resolve, ms);
+    });
 }
 
 async function getFilePaths() {
-    let filePaths = fs.readFileSync(accountsPath, { encoding: 'utf-8' })
-    return filePaths.split(`\r\n`)
+    let filePaths = fs.readFileSync(accountsPath, { encoding: 'utf-8' });
+
+    return filePaths.length > 0 ? filePaths.split(`\r\n`) : '';
 }
 
 async function main() {
-    const paths = await getFilePaths()
+    const paths = await getFilePaths();
+    var start = new Date(),
+        hrstart = process.hrtime();
 
-    await paths.reduce(async(promise, path) => {
-        await promise;
-        await toUnfollow(path);
-    }, Promise.resolve());
+    configs.unfollow.count.paths = paths.length;
+
+    if (configs.unfollow.count.paths > 0) {
+
+        await paths.reduce(async(promise, path) => {
+            await promise;
+            path.length > 0 ? await toUnfollow(path) : Promise.resolve();
+        }, Promise.resolve());
+
+        showResults();
+
+    } else {
+
+        console.log('');
+        console.log('----------------------------');
+        console.log('');
+
+        console.log('No results were found');
+    }
+
+    setTimeout(function() {
+        var end = new Date() - start,
+            hrend = process.hrtime(hrstart);
+
+        console.log('');
+        console.log('----------------------------');
+        console.log('');
+        console.log("Execution time: %ds %dms", hrend[0], hrend[1] / 1000000);
+        console.log('');
+        console.log('----------------------------');
+        console.log('');
+    }, 1);
 
 }
 
 async function toUnfollow(path) {
-    unfollow.host = path.split('/')[2]
-    unfollow.account = path.split('/')[3]
+    configs.unfollow.count.paths = configs.unfollow.count.paths - 1;
 
-    console.log('')
-    console.log(chalk.green('----------------------------'))
-    console.log('')
-    console.log(`--- Begind the steps for ${chalk.green(unfollow.account)} account ---`)
-    console.log('')
+    unfollow.host = path.split('/')[2];
+    unfollow.account = path.split('/')[3];
 
-    /**
-     * STEP ONE START *
-     * find the browser and click to open
-     */
-    console.log('Move and click on navigator')
-    robot.moveMouse(160, 1060)
-    robot.mouseClick()
+    console.log('');
+    console.log('----------------------------');
+    console.log('');
+    console.log(`--- Starting the steps for ${chalk.green(unfollow.account)} account ---`);
+    console.log('');
+    console.log('----------------------------');
+    console.log('');
 
-    await sleep(500)
+    moveMouseAndClick('browser');
+    addNewTab();
+    writeUrlAndEnter();
+    await sleep(500);
+    moveMouseAndClick('terminal');
 
-    /**
-     * STEP TWO START *
-     * click on add a new tab
-     */
-    console.log('Move and click to a new tab')
-    robot.moveMouse(1240, 27)
-    robot.mouseClick()
+    console.log(`${chalk.green('1 - Unfollow')}`);
+    console.log(`${chalk.green('2 - Still Following')}`);
+    console.log(`${chalk.green('3 - Do nothing')}`);
 
-    await sleep(500)
-
-    /**
-     * STEP THREE START *
-     * write in browser a Instagram URL plus account ID and press enter
-     * to access the website
-     */
-    console.log('Write url')
-    unfollow.host.split('').forEach(hostElement => {
-        robot.keyTap(hostElement)
-    })
-    robot.keyTap('/')
-    unfollow.account.split('').forEach(accElement => {
-        if (accElement == '_') {
-            robot.keyTap(accElement, 'shift')
-        } else {
-            robot.keyTap(accElement)
-        }
-    })
-    robot.keyTap('enter')
-
-    await sleep(1000)
-
-    /**
-     * STEP FOUR START *
-     */
-    console.log('Move and click on terminal')
-    robot.moveMouse(1600, 600)
-    robot.mouseClick()
-
-    /**
-     * STEP FIVE START *
-     */
-    console.log(`${chalk.green('1 - Unfollow')}`)
-    console.log(`${chalk.green('2 - Still Following')}`)
-
-    let answers
+    let answers;
     answers = await inquirer.prompt([{
         type: 'input',
         name: 'unfollow',
         message: `Unfollow this user ${unfollow.account}? `,
         validate: value => value ? true : 'the field cannot be empty'
-    }])
+    }]);
 
     if (answers.unfollow == '1') {
-        console.log('')
-        console.log(`${chalk.red('Unfollowing...!')}`)
-        console.log(`${chalk.red(unfollow.account)}`)
-        console.log('')
+        configs.unfollow.count.unfollow.count++;
+        configs.unfollow.count.unfollow.accounts.push(path);
 
-        await sleep(500)
+        console.log('');
+        console.log(chalk.red(`Unfollowing ${unfollow.account} ...!`));
+        console.log('');
 
-        //mudar o mudar do botao, as vezes tem o botao de messagem e ele atrapalha
-        console.log('Move and click in button of friend')
-        robot.moveMouse(820, 218)
-        robot.mouseClick()
+        moveMouseAndClick('friend');
+        await sleep(500);
+        moveMouseAndClick('unfollow');
+        await sleep(1000);
+        closeTab();
+        moveMouseAndClick('terminal');
 
-        await sleep(500)
+    } else if (answers.unfollow == '3') {
+        configs.unfollow.count.doNothing.count++;
+        configs.unfollow.count.doNothing.accounts.push(path);
 
-        console.log('Move and click in button for unfollow')
-        robot.moveMouse(720, 650)
-            //robot.mouseClick()
+        console.log('');
+        console.log(chalk.green('Do nothing to: ' + unfollow.account));
+        console.log('');
 
-        await sleep(2000)
-
-        console.log('Close the tab')
-        robot.keyTap('w', 'control')
-
-        await sleep(500)
-
-        console.log('Move and click on terminal')
-        robot.moveMouse(1600, 600)
-        robot.mouseClick()
+        moveMouseAndClick('browser');
+        closeTab();
+        moveMouseAndClick('terminal');
 
     } else {
-        console.log('')
-        console.log(`${chalk.green('You will continue to follow: ' + unfollow.account + '!')}`)
-        console.log('')
+        configs.unfollow.count.stillFollow.count++;
+        configs.unfollow.count.stillFollow.accounts.push(path);
 
-        await sleep(2000)
+        console.log('');
+        console.log(chalk.green('You will continue to follow: ' + unfollow.account + '!'));
+        console.log('');
 
-        console.log('Move and click on navigator')
-        robot.moveMouse(160, 1060)
-        robot.mouseClick()
-
-        await sleep(500)
-
-        console.log('Close the tab')
-        robot.keyTap('w', 'control')
-
-        await sleep(500)
-
-        console.log('Move and click on terminal')
-        robot.moveMouse(1600, 600)
-        robot.mouseClick()
+        moveMouseAndClick('browser');
+        closeTab();
+        moveMouseAndClick('terminal');
     }
 }
 
-/*function testScreenCapture() {
+function addNewTab() {
+    console.log('Add new tab');
+    robot.keyTap('t', 'control');
+}
 
-    var img = robot.screen.capture(0, 0, 1920, 1080);
+function writeUrlAndEnter() {
+    console.log('Write url');
+    unfollow.host.split('').forEach(hostElement => {
+        robot.keyTap(hostElement);
+    })
+    robot.keyTap('/');
+    unfollow.account.split('').forEach(accElement => {
+        if (accElement == '_') {
+            robot.keyTap(accElement, 'shift');
+        } else {
+            robot.keyTap(accElement);
+        }
+    })
+    robot.keyTap('enter');
+}
 
-    var pixel = img.colorAt(631, 222)
+function moveMouseAndClick(options) {
+    console.log(`Move and click on ${options}`);
 
-    console.log(pixel)
+    switch (options) {
+        case 'browser':
+            robot.moveMouse(configs.browser.x, configs.browser.y);
+            break;
+        case 'terminal':
+            robot.moveMouse(configs.terminal.x, configs.terminal.y);
+            break;
+        case 'unfollow':
+            configs.unfollow.btn = findBtn();
+            robot.moveMouse(configs.unfollow.btn.x, configs.unfollow.btn.y);
+            break;
+        case 'friend':
+            robot.moveMouse(configs.friend.x, configs.friend.y);
+            break;
+        default:
+            break;
+    }
 
-}*/
+    robot.mouseClick();
+}
 
-//testScreenCapture()
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-main()
+function findBtn() {
+    console.log(`Find the button...`);
+
+    var img = robot.screen.capture(0, 110, 660, 970),
+        color = ["ef5e6a", "ee5460", "f1737d", "ed4956", "f6a5ac", "f04860", "f09090", "f0a8a8", "f0d8d8", "f07878", "f0c0c0", "f06060", "f06078", "f090a8"],
+        x = 1,
+        y = 110,
+        width = 660,
+        height = 970;
+
+    for (var i = 0; i < width * height; i++) {
+        var random_x = getRandomInt(0, width - 1);
+        var random_y = getRandomInt(0, height - 1);
+        var sample_color = img.colorAt(random_x, random_y);
+
+        if (color.includes(sample_color)) {
+            var screen_x = random_x + x;
+            var screen_y = random_y + y;
+            console.log("Found a button at: " + screen_x + ", " + screen_y + " color " + sample_color);
+            return { x: screen_x, y: screen_y };
+        }
+    }
+
+    return false;
+}
+
+function closeTab() {
+    console.log('Close the tab');
+    robot.keyTap('w', 'control');
+}
+
+function showResults() {
+
+    console.log('');
+    console.log('----------------------------');
+
+    if (configs.unfollow.count.stillFollow.accounts.length > 0) {
+        console.log('');
+        console.log('Still Follow:');
+        configs.unfollow.count.stillFollow.accounts.forEach((stillFollow, i) => {
+            var accFollowing = stillFollow.split('/')[3];
+            console.log(chalk.green(' - ' + accFollowing));
+        });
+
+    }
+
+    if (configs.unfollow.count.doNothing.accounts.length > 0) {
+        console.log('');
+        console.log(`Do nothing:`);
+        configs.unfollow.count.doNothing.accounts.forEach((doNothing, i) => {
+            var accDoNothing = doNothing.split('/')[3];
+            console.log(chalk.grey(' - ' + accDoNothing));
+        });
+    }
+
+    if (configs.unfollow.count.unfollow.accounts.length > 0) {
+        console.log('');
+        console.log('Unfollows:');
+        configs.unfollow.count.unfollow.accounts.forEach((unfollow, i) => {
+            var accUnfollow = unfollow.split('/')[3];
+            console.log(chalk.red(' - ' + accUnfollow));
+        });
+    }
+}
+
+main();
