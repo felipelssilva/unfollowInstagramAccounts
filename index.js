@@ -5,7 +5,7 @@ const fs = require('fs');
 const { join } = require('path');
 const path = require('path');
 const { config } = require("process");
-const accountsPath = path.join(__dirname, 'bin/accounts-2.json');
+const accountsPath = path.join(__dirname, 'bin/accounts.json');
 
 const configs = {
     browser: {
