@@ -17,6 +17,15 @@
 - [Story](#story)
 - [Configurations](#configurations)
 - [How I got my data](#how-i-got-my-data)
+    - [Open the modal](#open-the-modal)
+    - [Definning the scrollingToEnd function](#definning-the-scrollingtoend-function)
+    - [Defining the scrollinginterval varible](#defining-the-scrollinginterval-varible)
+    - [Clear interval function](#clear-interval-function)
+    - [Finding verified accounts](#finding-verified-accounts)
+    - [Loop for save the database](#loop-for-save-the-database)
+    - [Console save the data](#console-save-the-data)
+    - [Download your data](#download-your-data)
+    - [Putting the file on the project](#putting-the-file-on-the-project)
 - [How to use](#how-to-use)
 - [What does the system do?](#what-does-the-system-do)
 - [Plans](#plans)
@@ -26,14 +35,14 @@
 
 ## Important
 
-> <span style="color:red">You need to be previously logged into your Instagram account.</span>
+> You need to be previously logged into your Instagram account.
 
-<span style="color:red">This code will not access any of your information, You will not be saving any information from your account, and not sending your data anywhere.</span>
-<span style="color:red; font-weight:900;">It's a semi-auto process for unfollow Instagram accounts.</span>
+This code will not access any of your information, You will not be saving any information from your account, and not sending your data anywhere.
+**It's a semi-auto process for unfollow Instagram accounts.**
 
-<span style="color:red;">Before running the entire process and making it work, review the code and understand it to answer you're possible questions.</span>
+Before running the entire process and making it work, review the code and understand it to answer you're possible questions.
 
-<span style="color:red;">In case you think in skip the Story below, it is fundamental to understand how I created and used the code.</span>
+In case you think in skip the Story below, it is fundamental to understand how I created and used the code.
 
 ---
 
@@ -70,11 +79,11 @@ There is a package called [RobotJS](http://robotjs.io/), with good documentation
 ## Configurations
 
 1. You will need [Node.js](https://nodejs.org/en/download) installed on your computer, version `v15.x` and the NPM `7.x`
-2. I recommend using the Windows OS. <small>(I had many problems in using the extensions needed to run on Linux. Okay, the detail that I used an extension on Windows that simulates the CLI of an Ubuntu, probably this hindered me a little in the use of the component)</small>
+2. I recommend using the Windows OS. (I had many problems in using the extensions needed to run on Linux. Okay, the detail that I used an extension on Windows that simulates the CLI of an Ubuntu, probably this hindered me a little in the use of the component)
 3. The ideal resolution for executing the code `1920x1080`, as you will split your screen, just like the example below:
     ![Example of how your screen needs to be](bin/imgs/example.jpg "Example of how your screen needs to be")
     > The browser needs to be a maximum of 660px, and the CMD fills up the rest of the screen.
-4. Your taskbar need to stay like that: <small>(because RobotJS, will move your cursor to this location and click there, where I hope your browser is already open)</small>
+4. Your taskbar need to stay like that: (because RobotJS, will move your cursor to this location and click there, where I hope your browser is already open)
     ![Example of how your taskbar need to be](bin/imgs/windows_bar.jpg "Example of how your taskbar need to be") 
 5. Your keyboard need to setted in English
 6. **Remember to read Docs of RobotJS to prevent executing with errors.**
@@ -129,6 +138,7 @@ document.querySelectorAll('.isgrP li span[title="Verified"]').forEach(function(a
     accVerified.closest('li').remove();
 })
 ```
+
 #### Loop for save the database
 Loop for save your data with a Instagram's URLs on a variable:
 ```javascript
@@ -140,8 +150,8 @@ document.querySelectorAll('.isgrP li').forEach(function(e){
 
 #### Console save the data
 
-**<span style="color:red">This below code isn't made by me, and I don't know exactly who did it. </span>**
-**<span style="color:red"> - IF YOU DID THIS PLEASE LET ME KNOW!!!! I have to give you the credits!</span>**
+> *This below code isn't made by me, and I don't know exactly who did it.*
+> *IF YOU DID THIS PLEASE LET ME KNOW!!!! I have to give you the credits!*
 
 Past the code in your browser:
 ```javascript
@@ -196,10 +206,10 @@ If you have a problem with the file, see the following line to fix it, some supp
 
 If you configured your environment correctly it will be simple to use.
 - In your CMD, access the path of the project 
-- Install all packages `npm i` <small>(If the installation dont work, go back to the [configurations](#configurations), follow the steps, stay tuned as [RobotJS](http://robotjs.io/docs/building) requires some necessary dependencies)</small>
+- Install all packages `npm i` (If the installation dont work, go back to the [configurations](#configurations), follow the steps, stay tuned as [RobotJS](http://robotjs.io/docs/building) requires some necessary dependencies)
 - Execute that follow command:
     ```
-    npm run index
+    npm run start
     ```
 - And enjoy, *with patience*, you will spend 10 seconds per account, to unfollow all the unnecessary accounts of your Instagram.
 
@@ -235,4 +245,5 @@ A short and simple permissive license with conditions only requiring preservatio
 ---
 
 Based on a necessity.
+
 Maintained by [Felipe Luis](https://www.felipeluis.com).
