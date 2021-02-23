@@ -2,6 +2,7 @@ const robot = require("robotjs");
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const fs = require('fs');
+const prettyMilliseconds = require('pretty-ms');
 const { join } = require('path');
 const path = require('path');
 const { config } = require("process");
@@ -63,10 +64,10 @@ async function getFilePaths() {
 
 async function main() {
     const paths = await getFilePaths();
-    var start = new Date(),
-        hrstart = process.hrtime();
+    var start = new Date();
 
     configs.unfollow.count.paths = paths.length;
+
 
     if (configs.unfollow.count.paths > 0) {
 
@@ -87,13 +88,11 @@ async function main() {
     }
 
     setTimeout(function() {
-        var end = new Date() - start,
-            hrend = process.hrtime(hrstart);
-
+        var end = new Date();
         console.log('');
         console.log('----------------------------');
         console.log('');
-        console.log("Execution time: %ds %dms", hrend[0], hrend[1] / 1000000);
+        console.log("Execution time: " + prettyMilliseconds(end - start));
         console.log('');
         console.log('----------------------------');
         console.log('');
