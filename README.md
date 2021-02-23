@@ -233,6 +233,7 @@ coming soon
 - [ ] Different way for:
     - [ ] opening the browser
     - [ ] find the my account button
+- [ ] Chrome extension
 
 ---
 
