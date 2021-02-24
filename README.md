@@ -4,6 +4,7 @@
 <p style="text-align:center;">
     <img src="https://img.shields.io/github/languages/top/felipelssilva/unfollowInstagramAccounts">
     <img src="https://img.shields.io/github/license/felipelssilva/unfollowInstagramAccounts">
+    <a href="https://hits.seeyoufarm.com" target="_blank"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Ffelipelssilva%2FunfollowInstagramAccounts&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 </p>
 <p style="text-align:center;">
     Node application to unfollow accounts on Instagram
