@@ -248,4 +248,4 @@ A short and simple permissive license with conditions only requiring preservatio
 
 Based on a necessity.
 
-Maintained by [Felipe Luis](https://www.felipeluis.com).
+Maintained by [Felipe Luis](http://www.felipeluis.com).
