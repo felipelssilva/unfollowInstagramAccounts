@@ -9,7 +9,7 @@
     "author": "Felipe Luis",
     "license": "ISC",
     "dependencies": {
-        "chalk": "^2.4.2",
+        "chalk": "^5.2.0",
         "inquirer": "^6.2.2",
         "pretty-ms": "^7.0.1",
         "robotjs": "^0.6.0"
