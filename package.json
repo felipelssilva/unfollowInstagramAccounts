@@ -10,7 +10,7 @@
     "license": "ISC",
     "dependencies": {
         "chalk": "^5.4.1",
-        "inquirer": "^9.3.8",
+        "inquirer": "^13.1.0",
         "pretty-ms": "^9.2.0",
         "robotjs": "^0.6.0"
     },
